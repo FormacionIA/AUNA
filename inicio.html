@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oncosalud – Inicio</title>
+  <style>
+    :root{
+      --sidebar:#0d5b7f;
+      --sidebar-dark:#0a4d6b;
+      --surface:#eef2f5;
+      --border:#e5e7eb;
+      --text:#374151;
+      --brand:#0b4f86;
+      --primary:#1677c5;
+      --primary-dark:#0f5d95;
+      --muted:#6b7280;
+      --panel-blue:#eaf6ff;
+      --panel-line:#96d0ff;
+      --success:#1b9e5a;
+      --danger:#b91c1c;
+    }
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; color: var(--text); background: var(--surface); }
+
+    .app-layout{ display:grid; grid-template-columns: 220px 1fr; grid-template-rows: 52px 1fr; height:100vh; }
+
+    .topbar{ grid-column: 1 / -1; display:flex; align-items:center; justify-content:space-between; padding: 0 16px; background:#ffffff; border-bottom:1px solid var(--border); }
+    .logo{ display:flex; align-items:center; gap:10px; font-weight:800; color:var(--brand); }
+    .logo-badge{ width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,#1ea8ff,#0b6bbb); display:grid; place-items:center; color:white; font-size:14px; font-weight:900; }
+    .user{ display:flex; align-items:center; gap:8px; color:#0b6bbb; font-size:13px; }
+    .avatar{ width:28px; height:28px; border-radius:50%; background:#c7e0ff; display:grid; place-items:center; }
+    a.btn-out{ margin-left:8px; font-size:13px; color:#0b6bbb; text-decoration:none; }
+
+    .sidenav{ background: var(--sidebar); color:#fff; border-right:1px solid rgba(255,255,255,.08); }
+    .side-header{ height:52px; display:flex; align-items:center; padding:0 14px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:700; letter-spacing:.3px; }
+    .menu{ list-style:none; padding: 0; margin:0; }
+    .menu li{ display:flex; align-items:center; gap:10px; padding: 12px 14px; border-bottom:1px dashed rgba(255,255,255,.08); cursor:pointer; font-size:14px; }
+    .menu li:hover{ background: var(--sidebar-dark); }
+    .menu .active{ background: #f59e0b; color:#1f2937; font-weight:700; }
+    .menu svg{ flex:0 0 18px; }
+
+    .content{ background: var(--surface); padding: 16px; overflow:auto; }
+    .panel{ background:#fff; border:1px solid var(--border); border-radius:10px; padding: 14px; }
+    .breadcrumb{ display:flex; align-items:center; gap:8px; font-weight:700; color:#374151; }
+    .welcome{ margin-top: 12px; background:#fff; border:1px solid var(--border); border-radius:10px; padding: 18px; font-size:18px; color:#4b5563; }
+
+    /* ===== COBRO EN LÍNEA ===== */
+    .panel-blue{ margin-top: 12px; background:#fff; border:2px solid var(--panel-line); border-radius:8px; }
+    .panel-blue .panel-title{ display:flex; align-items:center; gap:8px; padding:10px 14px; background: var(--panel-blue); border-bottom:2px solid var(--panel-line); font-weight:800; color:#2c3e50; }
+    .panel-blue .panel-body{ padding:16px; }
+
+    .fieldset{ border:2px solid var(--panel-line); border-radius:6px; }
+    .fieldset-legend{ padding:10px 14px; font-weight:700; color:#2c3e50; border-bottom:2px solid var(--panel-line); background:#f7fbff; }
+    .fieldset-body{ padding:30px; display:flex; align-items:center; gap:14px; justify-content:center; }
+    .fieldset-body label{ color:#4b5563; margin-right:10px; }
+    .input-text{ min-width: 380px; max-width: 520px; width: 50vw; padding:10px 12px; border:1.5px solid #cddfea; border-radius:6px; font-size:14px; }
+
+    .actions-row{ margin-top:16px; display:flex; gap:10px; justify-content:center; }
+    .btn{ border:1px solid #cfd6dd; background:#f7f7f7; color:#374151; padding:8px 14px; border-radius:6px; font-weight:600; cursor:pointer; }
+    .btn-primary{ background: var(--primary); border-color: var(--primary-dark); color:#fff; }
+    .btn:hover{ filter: brightness(1.02); }
+
+    .views > section{ display:none; }
+    .views > section.active{ display:block; }
+
+    /* Resultado */
+    .result-block{ margin-top: 16px; border:2px solid var(--panel-line); border-radius:8px; overflow:hidden; }
+    .result-block .header{ background:#f7fbff; border-bottom:2px solid var(--panel-line); padding:10px 14px; display:flex; align-items:center; gap:8px; font-weight:800; }
+    .info-grid{ display:grid; grid-template-columns: repeat(6, 1fr); gap: 10px 18px; padding: 16px; }
+    .info-item{ font-size:13px; }
+    .info-item .label{ color:#6b7280; display:block; font-weight:600; }
+    .info-item .value{ color:#111827; font-weight:700; }
+
+    .tabs{ display:flex; gap:8px; border-bottom:2px solid var(--panel-line); padding: 10px 14px 0; }
+    .tab{ padding:6px 10px; background:#fff; border:2px solid var(--panel-line); border-bottom:none; border-radius:6px 6px 0 0; font-weight:700; cursor:pointer; }
+    .tab.active{ background:#fff; }
+
+    table{ width:100%; border-collapse: collapse; }
+    thead th{ background:#0b6bbb; color:#fff; text-align:left; padding:10px; font-weight:800; }
+    tbody td{ padding:10px; border-bottom:1px solid #e5e7eb; }
+    tbody tr:nth-child(even){ background:#f9fbfd; }
+    .state-pill{ font-size:12px; font-weight:800; }
+
+    .foot-actions{ display:flex; justify-content:flex-end; gap:10px; padding: 10px 0; }
+    .btn-secondary{ background:#fff; border:1px solid #cfd6dd; }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="topbar">
+      <div class="logo"><span class="logo-badge">O</span> oncosalud</div>
+      <div class="user">
+        <span id="userName">USUARIO</span>
+        <div class="avatar" aria-hidden="true">👤</div>
+        <a class="btn-out" href="index.html" title="Salir">Salir</a>
+      </div>
+    </div>
+
+    <aside class="sidenav">
+      <div class="side-header">Menú</div>
+      <ul class="menu" id="menu">
+        <li data-view="inicio" class="active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>
+          Inicio
+        </li>
+        <li data-view="afiliados">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Afiliados
+        </li>
+        <li data-view="cobro">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/></svg>
+          Cobro en Línea
+        </li>
+        <li data-view="domicilio">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Cobro a Domicilio
+        </li>
+        <li data-view="enlace">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4"/><path d="M7 19V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/></svg>
+          Enlace de Pago
+        </li>
+        <li data-view="reportes">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M19 13l-5-5-4 4-3-3"/></svg>
+          Reportes
+        </li>
+        <li data-view="sistema">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1z"/></svg>
+          Sistema
+        </li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <div class="panel" id="crumb">
+        <div class="breadcrumb">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          <span id="crumbText">INICIO</span>
+        </div>
+      </div>
+
+      <div class="views">
+        <!-- Vista INICIO -->
+        <section id="view-inicio" class="active">
+          <div class="welcome">Bienvenido al Panel de Gestión</div>
+        </section>
+
+        <!-- Vista COBRO EN LÍNEA -->
+        <section id="view-cobro">
+          <div class="panel-blue">
+            <div class="panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/></svg>
+              COBRO EN LÍNEA
+            </div>
+            <div class="panel-body">
+              <div class="fieldset">
+                <div class="fieldset-legend">Datos del Afiliado</div>
+                <div class="fieldset-body">
+                  <label for="grupo">Grupo Familiar *</label>
+                  <input class="input-text" id="grupo" type="text" placeholder="" />
+                </div>
+              </div>
+              <div class="actions-row">
+                <button class="btn" id="btnSalir">&#8617; Salir</button>
+                <button class="btn btn-primary" id="btnBuscar">&#128269; Buscar</button>
+              </div>
+
+              <!-- RESULTADO (oculto hasta buscar) -->
+              <div id="resultado" style="display:none;">
+                <!-- Información del afiliado titular -->
+                <div class="result-block" style="margin-top:20px;">
+                  <div class="header">Información del afiliado titular</div>
+                  <div class="info-grid">
+                    <div class="info-item"><span class="label">Afiliado titular:</span><span id="r_nombre" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Documento de identidad:</span><span id="r_dni" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Código de afiliación:</span><span id="r_codigo" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Programa:</span><span id="r_programa" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Inicio de vigencia:</span><span id="r_inicio" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Registrado Portal:</span><span id="r_registro" class="value">—</span></div>
+                  </div>
+                </div>
+
+                <!-- Selección de cuotas -->
+                <div class="result-block">
+                  <div class="header">Seleccione la(s) cuota(s) a cobrar</div>
+                  <div class="tabs">
+                    <div id="tabPend" class="tab active">Cuotas Pendientes</div>
+                    <div id="tabPag" class="tab">Cuotas Pagadas</div>
+                  </div>
+                  <div id="tablePend" class="table-wrap" style="padding:14px;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Periodo</th>
+                          <th>Monto</th>
+                          <th>Vencimiento</th>
+                          <th>Estado</th>
+                          <th>Cobrar</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tbodyPend"></tbody>
+                    </table>
+                    <div class="foot-actions">
+                      <button class="btn btn-secondary" id="btnCancelar">✖ Cancelar</button>
+                      <button class="btn btn-primary" id="btnContinuar">Continuar ▶</button>
+                    </div>
+                  </div>
+                  <div id="tablePag" class="table-wrap" style="padding:14px; display:none;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Periodo</th>
+                          <th>Monto</th>
+                          <th>Fecha de pago</th>
+                          <th>Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tbodyPag"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- /RESULTADO -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Otras secciones -->
+        <section id="view-afiliados"><div class="welcome">Afiliados (en construcción)</div></section>
+        <section id="view-domicilio"><div class="welcome">Cobro a Domicilio (en construcción)</div></section>
+        <section id="view-enlace"><div class="welcome">Enlace de Pago (en construcción)</div></section>
+        <section id="view-reportes"><div class="welcome">Reportes (en construcción)</div></section>
+        <section id="view-sistema"><div class="welcome">Sistema (en construcción)</div></section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Rellenar nombre con ?u=...
+    const params = new URLSearchParams(window.location.search);
+    const u = params.get('u');
+    if(u){ document.getElementById('userName').textContent = u; }
+
+    // Router simple por vistas
+    const menu = document.getElementById('menu');
+    const crumbText = document.getElementById('crumbText');
+    const views = {
+      inicio: document.getElementById('view-inicio'),
+      afiliados: document.getElementById('view-afiliados'),
+      cobro: document.getElementById('view-cobro'),
+      domicilio: document.getElementById('view-domicilio'),
+      enlace: document.getElementById('view-enlace'),
+      reportes: document.getElementById('view-reportes'),
+      sistema: document.getElementById('view-sistema'),
+    };
+
+    function setActive(view){
+      [...menu.children].forEach(li=> li.classList.toggle('active', li.dataset.view===view));
+      Object.entries(views).forEach(([k,el])=> el.classList.toggle('active', k===view));
+      crumbText.textContent = view === 'inicio' ? 'INICIO' : `Inicio / ${titleFor(view)}`;
+    }
+    function titleFor(v){
+      return ({ inicio:'INICIO', afiliados:'Afiliados', cobro:'Cobro en Línea', domicilio:'Cobro a Domicilio', enlace:'Enlace de Pago', reportes:'Reportes', sistema:'Sistema' })[v] || v;
+    }
+    menu.addEventListener('click', (e)=>{
+      const li = e.target.closest('li[data-view]');
+      if(!li) return;
+      setActive(li.dataset.view);
+    });
+
+    // ====== COBRO EN LÍNEA LOGIC ======
+    const btnSalir = document.getElementById('btnSalir');
+    const btnBuscar = document.getElementById('btnBuscar');
+    const resultado = document.getElementById('resultado');
+    const tbodyPend = document.getElementById('tbodyPend');
+    const tbodyPag = document.getElementById('tbodyPag');
+    const tabPend = document.getElementById('tabPend');
+    const tabPag = document.getElementById('tabPag');
+    const tablePend = document.getElementById('tablePend');
+    const tablePag = document.getElementById('tablePag');
+
+    btnSalir.addEventListener('click', ()=> setActive('inicio'));
+
+    tabPend.addEventListener('click', ()=>{ tabPend.classList.add('active'); tabPag.classList.remove('active'); tablePend.style.display='block'; tablePag.style.display='none';});
+    tabPag.addEventListener('click', ()=>{ tabPag.classList.add('active'); tabPend.classList.remove('active'); tablePend.style.display='none'; tablePag.style.display='block';});
+
+    // Datos demo (puedes reemplazar por fetch a tu backend)
+    function demoData(grupo){
+      // Valores simulados basados en el código digitado
+      const nombre = 'CASTAÑEDA VASQUEZ, GLORIA LUDOVINA';
+      const dni = 'DNI 45977233';
+      const codigo = '1001148555';
+      const programa = 'PROGRAMA DR AUNA';
+      const inicio = '01/10/2024';
+      const registrado = 'NO';
+
+      // Genera 6 cuotas pendientes tipo 2025/04 ... 2025/09
+      const base = new Date(2025,3,19); // 19/04/2025
+      const pendientes = Array.from({length:6}).map((_,i)=>{
+        const d = new Date(base); d.setMonth(base.getMonth()+i);
+        const periodo = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}`;
+        const venc = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+        return {periodo, monto: 5.66, vencimiento: venc, estado: 'PENDIENTE'};
+      });
+
+      const pagadas = [
+        {periodo:'2025/03', monto:5.66, fecha:'19/03/2025', estado:'PAGADO'},
+        {periodo:'2025/02', monto:5.66, fecha:'19/02/2025', estado:'PAGADO'},
+      ];
+
+      return { nombre, dni, codigo, programa, inicio, registrado, pendientes, pagadas };
+    }
+
+    btnBuscar.addEventListener('click', ()=>{
+      const val = document.getElementById('grupo').value.trim();
+      if(!val){ alert('Ingresa el Grupo Familiar'); return; }
+
+      // TODO: reemplazar por fetch a tu API. Por ahora usamos demoData(val)
+      const data = demoData(val);
+
+      // Pinta cabecera
+      document.getElementById('r_nombre').textContent = data.nombre;
+      document.getElementById('r_dni').textContent = data.dni;
+      document.getElementById('r_codigo').textContent = data.codigo;
+      document.getElementById('r_programa').textContent = data.programa;
+      document.getElementById('r_inicio').textContent = data.inicio;
+      document.getElementById('r_registro').textContent = data.registrado;
+
+      // Tabla pendientes
+      tbodyPend.innerHTML = data.pendientes.map((q,i)=>`
+        <tr>
+          <td>${q.periodo}</td>
+          <td>S/. ${q.monto.toFixed(2)}</td>
+          <td>${q.vencimiento}</td>
+          <td><span class="state-pill">${q.estado}</span></td>
+          <td><input type="checkbox" aria-label="Cobrar ${q.periodo}" /></td>
+        </tr>
+      `).join('');
+
+      // Tabla pagadas
+      tbodyPag.innerHTML = data.pagadas.map(q=>`
+        <tr>
+          <td>${q.periodo}</td>
+          <td>S/. ${q.monto.toFixed(2)}</td>
+          <td>${q.fecha}</td>
+          <td><span class="state-pill">${q.estado}</span></td>
+        </tr>
+      `).join('');
+
+      resultado.style.display = 'block';
+      // Cambia breadcrumb si aún no estás en la vista Cobro
+      setActive('cobro');
+    });
+
+    // Botones pie (demo)
+    document.getElementById('btnCancelar').addEventListener('click', ()=>{
+      document.getElementById('grupo').value = '';
+      resultado.style.display = 'none';
+    });
+    document.getElementById('btnContinuar').addEventListener('click', ()=>{
+      const marcadas = [...document.querySelectorAll('#tbodyPend input[type="checkbox"]:checked')].length;
+      if(!marcadas){ alert('Selecciona al menos una cuota para continuar.'); return; }
+      alert('Continuar con ' + marcadas + ' cuota(s) seleccionada(s). (demo)');
+    });
+  </script>
+</body>
+</html>

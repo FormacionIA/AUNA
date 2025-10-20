@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oncosalud – Ingreso</title>
+  <style>
+    :root{
+      --bg: #0f172a;
+      --card-bg: #ffffff;
+      --card-shadow: 0 20px 45px rgba(2, 6, 23, .35);
+      --primary: #1677c5;
+      --primary-700:#1363a4;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      color: #111827;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    /* Fondo con imagen nítida */
+    .bg {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      background-image: url('bg.jpg'); /* tu imagen */
+      background-size: cover; background-position: center;
+    }
+    .bg::after{ content:""; position:absolute; inset:0; background: rgba(15, 23, 42, .18); }
+
+    /* Contenedor centrado del login */
+    .wrap { position: relative; z-index: 1; height: 100%; width: 100%; display: grid; place-items: center; padding: 24px; }
+
+    /* Tarjeta de login */
+    .card { width: 100%; max-width: 520px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--card-shadow); padding: 28px 28px 22px; }
+
+    .brand { display:flex; align-items:center; gap:12px; margin-bottom: 18px; }
+    .brand-logo{ width: 42px; height: 42px; display:grid; place-items:center; border-radius: 10px; background: radial-gradient(85% 85% at 30% 30%, #1ea8ff 0%, #1677c5 60%, #0e4f88 100%); color: white; font-weight: 900; letter-spacing: .4px; font-size: 22px; }
+    .brand-title{font-weight: 800; font-size: 28px; color:#0b4f86; line-height:1;}
+    .brand-sub{display:block; font-size:12px; color:#2d6ea2; margin-top: 2px; font-weight:700;}
+
+    .form { margin-top: 6px; }
+    label { display:block; font-size: 12px; color: var(--muted); margin: 14px 0 6px; }
+    .input { position: relative; display: grid; }
+    .input input { width: 100%; border: 1.5px solid var(--border); background: #fff; outline: none; padding: 12px 44px 12px 12px; border-radius: 10px; font-size: 15px; transition: border-color .15s ease, box-shadow .15s ease; }
+    .input input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(22,119,197,.12); }
+    .input .addon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; gap: 8px; }
+    .icon-btn { border: none; background: transparent; padding: 6px; border-radius: 8px; cursor: pointer; display:grid; place-items:center; transition: background .15s ease, transform .05s ease; }
+    .icon-btn:hover{ background:#f3f4f6; }
+    .icon-btn:active{ transform: translateY(1px); }
+
+    .actions { margin-top: 18px; display:grid; gap: 10px; }
+    .btn-primary { padding: 12px 14px; border-radius: 10px; border:none; cursor:pointer; background: var(--primary); color: #fff; font-weight: 700; font-size: 15px; letter-spacing:.2px; transition: transform .04s ease, filter .15s ease, background .15s ease; width: 100%; }
+    .btn-primary:hover{ filter: brightness(1.03); background: var(--primary-700); }
+    .btn-primary:active{ transform: translateY(1px); }
+
+    .helper { text-align:center; margin-top: 14px; }
+    .helper a{ color:#0b6bbb; text-decoration: none; font-size: 13px; }
+    .helper a:hover{ text-decoration: underline; }
+
+    .back-words{ position:absolute; inset: 0; pointer-events:none; z-index:0; color: rgba(255,255,255,.15); font-weight:800; text-transform:uppercase; letter-spacing:.2em; font-size: clamp(36px, 6vw, 80px); display:flex; align-items:flex-start; justify-content:flex-start; padding: 32px; }
+
+    @media (max-width: 520px){ .card{ padding: 22px; } .brand-title{ font-size: 24px; } }
+  </style>
+</head>
+<body>
+  <!-- Fondo -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <!-- LOGIN -->
+  <div class="wrap">
+    <div class="back-words" aria-hidden="true">WEBINAR</div>
+
+    <div class="card" role="dialog" aria-labelledby="titulo-login" aria-describedby="desc-login">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">O</div>
+        <div>
+          <div id="titulo-login" class="brand-title">oncosalud</div>
+          <span class="brand-sub" id="desc-login">TU LUCHA, NUESTRA LUCHA</span>
+        </div>
+      </div>
+
+      <form class="form" onsubmit="event.preventDefault(); handleSubmit();" autocomplete="on">
+        <label for="dni">Usuario</label>
+        <div class="input">
+          <input id="dni" name="dni" inputmode="numeric" pattern="[0-9]*" placeholder="705640711" aria-label="Usuario" required />
+          <div class="addon">
+            <button class="icon-btn" type="button" aria-label="Seleccionar usuario" title="Seleccionar usuario">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <label for="password">Contraseña</label>
+        <div class="input">
+          <input id="password" name="password" type="password" placeholder="••••••••" aria-label="Contraseña" required />
+          <div class="addon">
+            <button id="togglePass" class="icon-btn" type="button" aria-label="Mostrar u ocultar contraseña" title="Mostrar/Ocultar">
+              <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Ingresar</button>
+        </div>
+      </form>
+
+      <div class="helper">
+        <a href="#" onclick="alert('Recuperación de contraseña (demo)'); return false;">¿Olvidaste tu contraseña?</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mostrar/Ocultar contraseña
+    const toggle = document.getElementById('togglePass');
+    const pass = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+    toggle?.addEventListener('click', () => {
+      const isPwd = pass.getAttribute('type') === 'password';
+      pass.setAttribute('type', isPwd ? 'text' : 'password');
+      eyeIcon.innerHTML = isPwd
+        ? '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-6.95"/><path d="M1 1l22 22"/><path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-3.35 4.94"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>'
+        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    });
+
+    // Redirige a la segunda parte con el usuario en query-string
+    function handleSubmit(){
+      const dni = document.getElementById('dni').value.trim();
+      const pwd = document.getElementById('password').value.trim();
+      if(!dni || !pwd){
+        alert('Ingresa usuario y contraseña');
+        return;
+      }
+      // Aquí pondrías la validación real contra tu backend.
+      window.location.href = `inicio.html?u=${encodeURIComponent(dni)}`;
+    }
+  </script>
+</body>
+</html>
