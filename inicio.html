@@ -304,7 +304,20 @@
     const menuEl = document.getElementById('menu'); const crumbText = document.getElementById('crumbText');
     const views = { inicio:document.getElementById('view-inicio'), afiliados:document.getElementById('view-afiliados'), cobro:document.getElementById('view-cobro'), domicilio:document.getElementById('view-domicilio'), enlace:document.getElementById('view-enlace'), reportes:document.getElementById('view-reportes'), sistema:document.getElementById('view-sistema') };
     function setActive(view){ [...menuEl.children].forEach(li=> li.classList.toggle('active', li.dataset.view===view)); Object.entries(views).forEach(([k,el])=> el.classList.toggle('active', k===view)); crumbText.textContent = view==='inicio' ? 'INICIO' : `Inicio / ${view}`; }
-    menuEl.addEventListener('click', e=>{ const li=e.target.closest('li[data-view]'); if(!li) return; setActive(li.dataset.view); });
+    menuEl.addEventListener('click', e=>{
+  const li=e.target.closest('li[data-view]');
+  if(!li) return;
+
+  // 👉 Enlace externo para "Afiliados"
+  if(li.dataset.view === 'afiliados'){
+    const user = document.getElementById('userName').textContent.trim();
+    window.location.href = `iinicio.html?u=${encodeURIComponent(user)}`;
+    return;
+  }
+
+  // Resto de vistas siguen funcionando dentro de inicio.html
+  setActive(li.dataset.view);
+});
 
     // === COBRO EN LÍNEA ===
     const btnSalir = document.getElementById('btnSalir'); const btnBuscar = document.getElementById('btnBuscar'); const resultado = document.getElementById('resultado');
@@ -520,3 +533,4 @@
   </script>
 </body>
 </html>
+
