@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oncosalud – Afiliados</title>
+  <style>
+    :root{
+      --sidebar:#0d5b7f; --sidebar-dark:#0a4d6b; --surface:#eef2f5; --border:#e5e7eb; --text:#374151;
+      --brand:#0b4f86; --primary:#1677c5; --primary-dark:#0f5d95; --panel-blue:#eaf6ff; --panel-line:#96d0ff;
+    }
+    *{ box-sizing:border-box; } html,body{ height:100%; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial; color:var(--text); background:var(--surface); }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:#fff; border-bottom:1px solid var(--border); }
+    .logo{ display:flex; align-items:center; gap:10px; font-weight:800; color:var(--brand); }
+    .logo-badge{ width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,#1ea8ff,#0b6bbb); display:grid; place-items:center; color:#fff; font-size:14px; font-weight:900; }
+    .user{ display:flex; align-items:center; gap:8px; color:#0b6bbb; font-size:13px; }
+    .avatar{ width:28px; height:28px; border-radius:50%; background:#c7e0ff; display:grid; place-items:center; }
+    .content{ padding:16px; max-width:1100px; margin:0 auto; }
+    .panel{ background:#fff; border:1px solid var(--border); border-radius:10px; padding:16px; }
+    .title{ font-weight:900; font-size:18px; color:#2c3e50; margin-bottom:12px; }
+    .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+    .card{ border:1px solid #dbe5ef; background:#fbfdff; border-radius:10px; padding:14px; display:flex; flex-direction:column; gap:8px; }
+    .card h3{ margin:0; font-size:15px; color:#0b4f86; }
+    .card p{ margin:0; font-size:13px; color:#6b7280; }
+    .card a{ align-self:flex-start; text-decoration:none; font-weight:700; font-size:13px; color:#1677c5; }
+    .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
+    .btn{ border:1px solid #cfd6dd; background:#fff; padding:8px 12px; border-radius:8px; cursor:pointer; }
+    .btn-primary{ background:var(--primary); color:#fff; border-color:var(--primary-dark); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo"><span class="logo-badge">O</span> oncosalud</div>
+    <div class="user"><span id="userName">USUARIO</span><div class="avatar">👤</div></div>
+  </div>
+
+  <main class="content">
+    <div class="panel">
+      <div class="title">Afiliados</div>
+      <div class="grid">
+        <div class="card">
+          <h3>Consulta de Afiliados</h3>
+          <p>Busca afiliado por Grupo Familiar, DNI o Código.</p>
+          <a href="#" onclick="alert('Demo: Consulta de Afiliados');return false;">Abrir</a>
+        </div>
+        <div class="card">
+          <h3>Cambio de Tarjeta</h3>
+          <p>Actualiza la tarjeta registrada para los pagos del plan.</p>
+          <a href="#" onclick="alert('Demo: Cambio de Tarjeta');return false;">Abrir</a>
+        </div>
+        <div class="card">
+          <h3>Actualización de Datos</h3>
+          <p>Modifica correo, teléfono y dirección.</p>
+          <a href="#" onclick="alert('Demo: Actualización de Datos');return false;">Abrir</a>
+        </div>
+        <div class="card">
+          <h3>Historial de Pagos</h3>
+          <p>Visualiza pagos realizados y comprobantes.</p>
+          <a href="#" onclick="alert('Demo: Historial de Pagos');return false;">Abrir</a>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btnVolver">◀ Volver al Panel</button>
+        <button class="btn btn-primary" id="btnCobro">Ir a Cobro en Línea ▶</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Lee ?u= para mostrar el usuario y volver con él
+    const params = new URLSearchParams(location.search);
+    const u = params.get('u') || 'USUARIO';
+    document.getElementById('userName').textContent = u;
+
+    document.getElementById('btnVolver').addEventListener('click', ()=>{
+      window.location.href = `inicio.html?u=${encodeURIComponent(u)}`;
+    });
+    document.getElementById('btnCobro').addEventListener('click', ()=>{
+      window.location.href = `inicio.html?u=${encodeURIComponent(u)}#cobro`;
+    });
+  </script>
+</body>
+</html>
 
