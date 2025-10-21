@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oncosalud – Inicio</title>
+  <style>
+    :root{
+      --sidebar:#0d5b7f; --sidebar-dark:#0a4d6b; --surface:#eef2f5; --border:#e5e7eb; --text:#374151;
+      --brand:#0b4f86; --primary:#1677c5; --primary-dark:#0f5d95; --panel-blue:#eaf6ff; --panel-line:#96d0ff;
+    }
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; color: var(--text); background: var(--surface); }
+    .app-layout{ display:grid; grid-template-columns: 220px 1fr; grid-template-rows: 52px 1fr; height:100vh; }
+    .topbar{ grid-column: 1 / -1; display:flex; align-items:center; justify-content:space-between; padding: 0 16px; background:#ffffff; border-bottom:1px solid var(--border); }
+    .logo{ display:flex; align-items:center; gap:10px; font-weight:800; color:var(--brand); }
+    .logo-badge{ width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,#1ea8ff,#0b6bbb); display:grid; place-items:center; color:white; font-size:14px; font-weight:900; }
+    .user{ display:flex; align-items:center; gap:8px; color:#0b6bbb; font-size:13px; }
+    .avatar{ width:28px; height:28px; border-radius:50%; background:#c7e0ff; display:grid; place-items:center; }
+    a.btn-out{ margin-left:8px; font-size:13px; color:#0b6bbb; text-decoration:none; }
+    .sidenav{ background: var(--sidebar); color:#fff; border-right:1px solid rgba(255,255,255,.08); }
+    .side-header{ height:52px; display:flex; align-items:center; padding:0 14px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:700; letter-spacing:.3px; }
+    .menu{ list-style:none; padding: 0; margin:0; }
+    .menu li{ display:flex; align-items:center; gap:10px; padding: 12px 14px; border-bottom:1px dashed rgba(255,255,255,.08); cursor:pointer; font-size:14px; }
+    .menu li:hover{ background: var(--sidebar-dark); }
+    .menu .active{ background: #f59e0b; color:#1f2937; font-weight:700; }
+    .menu svg{ flex:0 0 18px; }
+    .content{ background: var(--surface); padding: 16px; overflow:auto; }
+    .panel{ background:#fff; border:1px solid var(--border); border-radius:10px; padding: 14px; }
+    .breadcrumb{ display:flex; align-items:center; gap:8px; font-weight:700; color:#374151; }
+    .welcome{ margin-top: 12px; background:#fff; border:1px solid var(--border); border-radius:10px; padding: 18px; font-size:18px; color:#4b5563; }
+
+    /* ===== COBRO EN LÍNEA ===== */
+    .panel-blue{ margin-top: 12px; background:#fff; border:2px solid var(--panel-line); border-radius:8px; }
+    .panel-blue .panel-title{ display:flex; align-items:center; gap:8px; padding:10px 14px; background: var(--panel-blue); border-bottom:2px solid var(--panel-line); font-weight:800; color:#2c3e50; }
+    .panel-blue .panel-body{ padding:16px; }
+    .fieldset{ border:2px solid var(--panel-line); border-radius:6px; }
+    .fieldset-legend{ padding:10px 14px; font-weight:700; color:#2c3e50; border-bottom:2px solid var(--panel-line); background:#f7fbff; }
+    .fieldset-body{ padding:30px; display:flex; align-items:center; gap:14px; justify-content:center; }
+    .fieldset-body label{ color:#4b5563; margin-right:10px; }
+    .input-text{ min-width: 380px; max-width: 520px; width: 50vw; padding:10px 12px; border:1.5px solid #cddfea; border-radius:6px; font-size:14px; }
+    .actions-row{ margin-top:16px; display:flex; gap:10px; justify-content:center; }
+    .btn{ border:1px solid #cfd6dd; background:#f7f7f7; color:#374151; padding:8px 14px; border-radius:6px; font-weight:600; cursor:pointer; }
+    .btn-primary{ background: var(--primary); border-color: var(--primary-dark); color:#fff; }
+    .btn:hover{ filter: brightness(1.02); }
+    .views > section{ display:none; } .views > section.active{ display:block; }
+
+    .result-block{ margin-top: 16px; border:2px solid var(--panel-line); border-radius:8px; overflow:hidden; }
+    .result-block .header{ background:#f7fbff; border-bottom:2px solid var(--panel-line); padding:10px 14px; display:flex; align-items:center; gap:8px; font-weight:800; }
+    .info-grid{ display:grid; grid-template-columns: repeat(6, 1fr); gap: 10px 18px; padding: 16px; }
+    .info-item{ font-size:13px; } .info-item .label{ color:#6b7280; display:block; font-weight:600; } .info-item .value{ color:#111827; font-weight:700; }
+    .tabs{ display:flex; gap:8px; border-bottom:2px solid var(--panel-line); padding: 10px 14px 0; }
+    .tab{ padding:6px 10px; background:#fff; border:2px solid var(--panel-line); border-bottom:none; border-radius:6px 6px 0 0; font-weight:700; cursor:pointer; }
+    table{ width:100%; border-collapse: collapse; } thead th{ background:#0b6bbb; color:#fff; text-align:left; padding:10px; font-weight:800; } tbody td{ padding:10px; border-bottom:1px solid #e5e7eb; } tbody tr:nth-child(even){ background:#f9fbfd; }
+    .foot-actions{ display:flex; justify-content:flex-end; gap:10px; padding: 10px 0; }
+
+    /* ===== Paso 2 (Resumen) ===== */
+    .summary{ margin-top: 16px; border:2px solid var(--panel-line); border-radius:8px; overflow:hidden; }
+    .summary .header{ background:#f7fbff; border-bottom:2px solid var(--panel-line); padding:10px 14px; display:flex; align-items:center; gap:8px; font-weight:800; }
+    .summary .body{ padding:14px; }
+    .total-wrap{ display:flex; justify-content:flex-end; align-items:baseline; gap:16px; padding: 10px 0; }
+    .total-wrap .label{ color:#374151; font-weight:700; } .total-wrap .amount{ font-size:28px; font-weight:900; color:#0b6bbb; }
+
+    /* ===== Paso 3 (Pago) ===== */
+    .pay-block{ margin-top: 16px; border:2px solid var(--panel-line); border-radius:8px; overflow:hidden; }
+    .pay-block .header{ background:#f7fbff; border-bottom:2px solid var(--panel-line); padding:10px 14px; display:flex; align-items:center; gap:8px; font-weight:800; }
+    .pay-body{ padding:16px; }
+    .grid-2{ display:grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap:12px 16px; }
+    .form-field{ display:flex; flex-direction:column; gap:6px; }
+    .form-field label{ font-size:13px; color:#374151; font-weight:700; }
+    .form-field input, .form-field textarea, .form-field select{ padding:10px 12px; border:1.5px solid #cddfea; border-radius:6px; font-size:14px; }
+    .form-field textarea{ min-height:84px; resize:vertical; }
+    .help{ font-size:12px; color:#6b7280; }
+    .error{ color:#b91c1c; font-size:12px; }
+    .method-ui{ margin-top:12px; padding:12px; border:1px dashed #cddfea; border-radius:8px; background:#fbfdff; }
+    .brand-row{ display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+    .brand{ padding:6px 10px; border:1px solid #cfd6dd; border-radius:6px; background:#fff; font-weight:700; font-size:12px; display:flex; align-items:center; gap:8px; }
+    .brand svg{ width:48px; height:28px; display:block; }
+    .radio-row{ display:flex; gap:18px; align-items:center; margin:10px 0; }
+    /* opciones agrupadas para Tarjeta */
+    .option-row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
+    .option-card{ display:flex; align-items:center; gap:10px; padding:8px 12px; border:1.5px solid #cfd6dd; border-radius:8px; background:#fff; cursor:pointer; transition:all .15s ease; }
+    .option-card input{ accent-color:#1677c5; }
+    .option-card.selected{ border-color:#1677c5; box-shadow:0 0 0 3px rgba(22,119,197,.15); }
+
+    /* ===== Modal Tarjeta ===== */
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
+    .modal{ width: 360px; background:#fff; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,.25); overflow:hidden; }
+    .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid var(--border); }
+    .modal-logos{ display:flex; align-items:center; gap:10px; font-weight:900; color:#0b6bbb; }
+    .modal-close{ background:transparent; border:none; font-size:20px; cursor:pointer; color:#6b7280; }
+    .modal-body{ padding:14px; display:flex; flex-direction:column; gap:10px; }
+    .mfield{ display:flex; align-items:center; gap:8px; }
+    .mfield input, .mfield select{ flex:1; padding:9px 10px; border:1.5px solid #cddfea; border-radius:6px; font-size:14px; }
+    .modal-footer{ padding:14px; }
+    .btn-block{ width:100%; padding:12px; border-radius:8px; border:0; background:#0b6bbb; color:#fff; font-weight:800; cursor:pointer; }
+    .center{ text-align:center; }
+    .ok{ color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:10px; border-radius:8px; }
+    /* ===== Confirmación ===== */
+    .success{ border:2px solid #34d399; background:#ecfdf5; color:#065f46; border-radius:10px; padding:18px; }
+    .success h2{ margin:0 0 6px 0; font-size:20px; }
+    .code-badge{ display:inline-block; background:#064e3b; color:#a7f3d0; padding:4px 8px; border-radius:6px; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div class="topbar">
+      <div class="logo"><span class="logo-badge">O</span> oncosalud</div>
+      <div class="user"><span id="userName">USUARIO</span><div class="avatar" aria-hidden="true">👤</div><a class="btn-out" href="index.html">Salir</a></div>
+    </div>
+
+    <aside class="sidenav">
+      <div class="side-header">Menú</div>
+      <ul class="menu" id="menu">
+        <li data-view="inicio" class="active">Inicio</li>
+        <li data-view="afiliados">Afiliados</li>
+        <li data-view="cobro">Cobro en Línea</li>
+        <li data-view="domicilio">Cobro a Domicilio</li>
+        <li data-view="enlace">Enlace de Pago</li>
+        <li data-view="reportes">Reportes</li>
+        <li data-view="sistema">Sistema</li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <div class="panel" id="crumb"><div class="breadcrumb"><span id="crumbText">INICIO</span></div></div>
+      <div class="views">
+        <section id="view-inicio" class="active"><div class="welcome">Bienvenido al Panel de Gestión</div></section>
+
+        <!-- === COBRO EN LÍNEA === -->
+        <section id="view-cobro">
+          <div class="panel-blue"><div class="panel-title">COBRO EN LÍNEA</div><div class="panel-body">
+            <div class="fieldset"><div class="fieldset-legend">Datos del Afiliado</div><div class="fieldset-body">
+              <label for="grupo">Grupo Familiar *</label>
+              <input class="input-text" id="grupo" type="text" />
+            </div></div>
+            <div class="actions-row"><button class="btn" id="btnSalir">↩ Salir</button><button class="btn btn-primary" id="btnBuscar">🔎 Buscar</button></div>
+
+            <div id="resultado" style="display:none;">
+              <div class="result-block"><div class="header">Información del afiliado titular</div>
+                <div class="info-grid">
+                  <div class="info-item"><span class="label">Afiliado titular:</span><span id="r_nombre" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Documento de identidad:</span><span id="r_dni" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Código de afiliación:</span><span id="r_codigo" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Programa:</span><span id="r_programa" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Inicio de vigencia:</span><span id="r_inicio" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Registrado Portal:</span><span id="r_registro" class="value">—</span></div>
+                </div>
+              </div>
+
+              <div class="result-block">
+                <div class="header">Seleccione la(s) cuota(s) a cobrar</div>
+                <div class="tabs"><div id="tabPend" class="tab">Cuotas Pendientes</div><div id="tabPag" class="tab">Cuotas Pagadas</div></div>
+                <div id="tablePend" class="table-wrap" style="padding:14px;">
+                  <table><thead><tr><th>Periodo</th><th>Monto</th><th>Vencimiento</th><th>Estado</th><th>Cobrar</th></tr></thead><tbody id="tbodyPend"></tbody></table>
+                  <div class="foot-actions"><button class="btn btn-secondary" id="btnCancelar">✖ Cancelar</button><button class="btn btn-primary" id="btnContinuar">Continuar ▶</button></div>
+                </div>
+                <div id="tablePag" class="table-wrap" style="padding:14px; display:none;">
+                  <table><thead><tr><th>Periodo</th><th>Monto</th><th>Fecha de pago</th><th>Estado</th></tr></thead><tbody id="tbodyPag"></tbody></table>
+                </div>
+              </div>
+            </div>
+
+            <div id="resumen" style="display:none;">
+              <div class="result-block"><div class="header">Información del afiliado titular</div>
+                <div class="info-grid">
+                  <div class="info-item"><span class="label">Afiliado titular:</span><span id="s_nombre" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Documento de identidad:</span><span id="s_dni" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Código de afiliación:</span><span id="s_codigo" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Programa:</span><span id="s_programa" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Inicio de vigencia:</span><span id="s_inicio" class="value">—</span></div>
+                  <div class="info-item"><span class="label">Registrado Portal:</span><span id="s_registro" class="value">—</span></div>
+                </div>
+              </div>
+              <div class="summary"><div class="header">Cuotas a cobrar</div><div class="body">
+                <table><thead><tr><th>Periodo</th><th>Monto</th><th>Vencimiento</th><th>Estado</th><th></th></tr></thead><tbody id="tbodyResumen"></tbody></table>
+                <div class="total-wrap"><div class="label">Total a cobrar</div><div class="amount" id="totalCobrar">S/. 0.00</div></div>
+              </div></div>
+              <div class="foot-actions"><button class="btn btn-secondary" id="rCancelar">✖ Cancelar</button><button class="btn" id="rRegresar">◀ Regresar</button><button class="btn btn-primary" id="rContinuar">Continuar ▶</button></div>
+            </div>
+
+            <div id="pago" style="display:none;">
+              <div class="panel-blue"><div class="panel-title">COBRO EN LÍNEA</div><div class="panel-body">
+                <div class="result-block"><div class="header">Información del afiliado titular</div>
+                  <div class="info-grid">
+                    <div class="info-item"><span class="label">Afiliado titular:</span><span id="p_nombre" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Documento de identidad:</span><span id="p_dni" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Código de afiliación:</span><span id="p_codigo" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Programa:</span><span id="p_programa" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Inicio de vigencia:</span><span id="p_inicio" class="value">—</span></div>
+                    <div class="info-item"><span class="label">Registrado Portal:</span><span id="p_registro" class="value">—</span></div>
+                  </div>
+                </div>
+                <div class="result-block"><div class="header">Información del cobro</div>
+                  <div class="pay-body"><div id="p_periodos" class="help">—</div><div class="total-wrap"><div class="label">Total a cobrar</div><div class="amount" id="p_total">S/. 0.00</div></div></div>
+                </div>
+                <div class="pay-block"><div class="header">Información del Pago</div><div class="pay-body">
+                  <p class="help">Complete la información. Todos los campos son obligatorios.</p>
+                  <div class="grid-2">
+                    <div class="form-field"><label>Nombre de quien realiza el pago *</label><input id="pay_nombre" type="text" placeholder="Nombre(s)" /></div>
+                    <div class="form-field"><label>Apellido(s) *</label><input id="pay_apellidos" type="text" placeholder="Apellido(s)" /></div>
+                    <div class="form-field"><label>Correo para la constancia de pago *</label><input id="pay_email" type="email" placeholder="correo@dominio.com" /><span id="err_email" class="error" style="display:none;">Correo inválido</span></div>
+                    <div class="form-field"><label>Teléfono para la notificación SMS del pago *</label><input id="pay_phone" type="tel" inputmode="numeric" maxlength="9" placeholder="9xxxxxxxx" /><span id="err_phone" class="error" style="display:none;">Teléfono inválido</span></div>
+                    <div class="form-field" style="grid-column:1/-1;"><label>Observación adicional</label><textarea id="pay_obs"></textarea></div>
+                    <div class="form-field" style="grid-column:1/-1;"><label>Forma de pago *</label>
+                      <select id="pay_method">
+                        <option value="">Seleccione</option>
+                        <option>Tarjeta de Crédito</option>
+                        <option>Link de Pago: Tarjetas / Yape</option>
+                        <option>Cuotas Sin Intereses con BBVA, BCP y DINERS</option>
+                        <option>SafetyPay</option>
+                        <option>Código QR</option>
+                        <option>Red Digital</option>
+                      </select>
+                      <span id="err_method" class="error" style="display:none;">Seleccione un método</span>
+                      <div id="methodUI" class="method-ui" style="display:none;"></div>
+                    </div>
+                  </div>
+                  <div class="foot-actions"><button class="btn btn-secondary" id="pCancelar">✖ Cancelar</button><button class="btn" id="pRegresar">◀ Regresar</button><button class="btn btn-primary" id="pProcesar">Procesar pago ▶</button></div>
+                </div></div>
+              </div></div>
+            </div>
+          </div></div>
+        </section>
+
+        <!-- === CONFIRMACIÓN === -->
+        <section id="view-confirm" style="display:none;">
+          <div class="panel-blue"><div class="panel-title">PAGO</div><div class="panel-body">
+            <div class="success">
+              <h2>¡Pago realizado con éxito!</h2>
+              <div>Se envió tu constancia al correo y SMS registrados.</div>
+              <div style="margin-top:8px;">Código de operación: <span id="conf_codigo" class="code-badge">—</span></div>
+            </div>
+
+            <div class="result-block" style="margin-top:14px;">
+              <div class="header">Resumen del pago</div>
+              <div class="info-grid">
+                <div class="info-item"><span class="label">Afiliado titular</span><span id="conf_nombre" class="value">—</span></div>
+                <div class="info-item"><span class="label">Documento</span><span id="conf_dni" class="value">—</span></div>
+                <div class="info-item"><span class="label">Programa</span><span id="conf_programa" class="value">—</span></div>
+                <div class="info-item"><span class="label">Método</span><span id="conf_metodo" class="value">—</span></div>
+                <div class="info-item" style="grid-column:1 / -1;"><span class="label">Periodos</span><span id="conf_periodos" class="value">—</span></div>
+                <div class="info-item"><span class="label">Total pagado</span><span id="conf_total" class="value">S/. 0.00</span></div>
+              </div>
+            </div>
+
+            <div class="foot-actions">
+              <button class="btn" id="confImprimir">🖨 Imprimir</button>
+              <button class="btn" id="confVolverCobro">◀ Volver al cobro</button>
+              <button class="btn btn-primary" id="confNueva">Nueva operación ▶</button>
+            </div>
+          </div></div>
+        </section>
+
+        <section id="view-afiliados"><div class="welcome">Afiliados (en construcción)</div></section>
+        <section id="view-domicilio"><div class="welcome">Cobro a Domicilio (en construcción)</div></section>
+        <section id="view-enlace"><div class="welcome">Enlace de Pago (en construcción)</div></section>
+        <section id="view-reportes"><div class="welcome">Reportes (en construcción)</div></section>
+        <section id="view-sistema"><div class="welcome">Sistema (en construcción)</div></section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Tarjeta de Crédito -->
+  <div id="ccModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="ccTitle">
+      <div class="modal-header">
+        <div class="modal-logos"><span style="color:#2db4ff">auna</span> | <span>oncosalud</span></div>
+        <button class="modal-close" id="ccClose" aria-label="Cerrar">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="mfield"><input id="ccNumber" type="text" inputmode="numeric" placeholder="Número de tarjeta" maxlength="19"></div>
+        <div class="mfield"><input id="ccExpiry" type="text" inputmode="numeric" placeholder="MM/AA" maxlength="5"></div>
+        <div class="mfield">
+          <select id="ccCuotas">
+            <option>Sin cuotas</option>
+            <option>3 cuotas</option>
+            <option>6 cuotas</option>
+            <option>12 cuotas</option>
+          </select>
+        </div>
+        <div class="mfield">
+          <select id="ccDiferido">
+            <option>Pago sin diferido</option>
+            <option>Diferir 30 días</option>
+            <option>Diferir 60 días</option>
+          </select>
+        </div>
+        <div class="mfield"><input id="ccTitular" type="text" placeholder="Nombre del titular"></div>
+        <div id="ccResult" class="center" style="display:none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="ccPayBtn" class="btn-block">PAGAR</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Nombre de usuario desde ?u=...
+    const params = new URLSearchParams(window.location.search); const u = params.get('u'); if(u){ document.getElementById('userName').textContent = u; }
+
+    // Router básico
+    const menuEl = document.getElementById('menu'); const crumbText = document.getElementById('crumbText');
+    const views = { inicio:document.getElementById('view-inicio'), afiliados:document.getElementById('view-afiliados'), cobro:document.getElementById('view-cobro'), domicilio:document.getElementById('view-domicilio'), enlace:document.getElementById('view-enlace'), reportes:document.getElementById('view-reportes'), sistema:document.getElementById('view-sistema') };
+    function setActive(view){ [...menuEl.children].forEach(li=> li.classList.toggle('active', li.dataset.view===view)); Object.entries(views).forEach(([k,el])=> el.classList.toggle('active', k===view)); crumbText.textContent = view==='inicio' ? 'INICIO' : `Inicio / ${view}`; }
+    menuEl.addEventListener('click', e=>{ const li=e.target.closest('li[data-view]'); if(!li) return; setActive(li.dataset.view); });
+
+    // === COBRO EN LÍNEA ===
+    const btnSalir = document.getElementById('btnSalir'); const btnBuscar = document.getElementById('btnBuscar'); const resultado = document.getElementById('resultado');
+    const tbodyPend = document.getElementById('tbodyPend'); const tbodyPag = document.getElementById('tbodyPag');
+    const tabPend = document.getElementById('tabPend'); const tabPag = document.getElementById('tabPag'); const tablePend = document.getElementById('tablePend'); const tablePag = document.getElementById('tablePag');
+
+    btnSalir.addEventListener('click', ()=> setActive('inicio'));
+    tabPend.addEventListener('click', ()=>{ tabPend.classList.add('active'); tabPag.classList.remove('active'); tablePend.style.display='block'; tablePag.style.display='none';});
+    tabPag.addEventListener('click', ()=>{ tabPag.classList.add('active'); tabPend.classList.remove('active'); tablePend.style.display='none'; tablePag.style.display='block';});
+
+    function demoData(){
+      const data = { nombre:'CASTAÑEDA VASQUEZ, GLORIA LUDOVINA', dni:'DNI 45977233', codigo:'1001148555', programa:'PROGRAMA DR AUNA', inicio:'01/10/2024', registrado:'NO' };
+      const base = new Date(2025,3,19); data.pendientes = Array.from({length:6}).map((_,i)=>{ const d=new Date(base); d.setMonth(base.getMonth()+i); return { periodo:`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}`, monto:5.66, vencimiento:`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`, estado:'PENDIENTE' }; });
+      data.pagadas = [{periodo:'2025/03', monto:5.66, fecha:'19/03/2025', estado:'PAGADO'},{periodo:'2025/02',monto:5.66,fecha:'19/02/2025',estado:'PAGADO'}];
+      return data;
+    }
+
+    btnBuscar.addEventListener('click', ()=>{
+      const val = document.getElementById('grupo').value.trim(); if(!val){ alert('Ingresa el Grupo Familiar'); return; }
+      const data = demoData();
+      document.getElementById('r_nombre').textContent=data.nombre; document.getElementById('r_dni').textContent=data.dni; document.getElementById('r_codigo').textContent=data.codigo; document.getElementById('r_programa').textContent=data.programa; document.getElementById('r_inicio').textContent=data.inicio; document.getElementById('r_registro').textContent=data.registrado;
+      tbodyPend.innerHTML = data.pendientes.map(q=>`<tr><td>${q.periodo}</td><td>S/. ${q.monto.toFixed(2)}</td><td>${q.vencimiento}</td><td>${q.estado}</td><td><input type="checkbox" /></td></tr>`).join('');
+      tbodyPag.innerHTML = data.pagadas.map(q=>`<tr><td>${q.periodo}</td><td>S/. ${q.monto.toFixed(2)}</td><td>${q.fecha}</td><td>${q.estado}</td></tr>`).join('');
+      resultado.style.display='block'; setActive('cobro');
+    });
+
+    document.getElementById('btnCancelar').addEventListener('click', ()=>{ document.getElementById('grupo').value=''; resultado.style.display='none'; });
+
+    document.getElementById('btnContinuar').addEventListener('click', ()=>{
+      const seleccionadas = [...document.querySelectorAll('#tbodyPend tr')].map(tr=>{ const c=tr.querySelector('input[type="checkbox"]'); if(!c||!c.checked) return null; const t=tr.children; return { periodo:t[0].textContent.trim(), monto:parseFloat(t[1].textContent.replace('S/.','')), vencimiento:t[2].textContent.trim(), estado:t[3].textContent.trim() }; }).filter(Boolean);
+      if(!seleccionadas.length){ alert('Selecciona al menos una cuota'); return; }
+      ['nombre','dni','codigo','programa','inicio','registro'].forEach(k=>{ document.getElementById('s_'+k).textContent = document.getElementById('r_'+k).textContent; });
+      const tbodyRes=document.getElementById('tbodyResumen'); tbodyRes.innerHTML=''; seleccionadas.forEach(q=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${q.periodo}</td><td>S/. ${q.monto.toFixed(2)}</td><td>${q.vencimiento}</td><td>${q.estado}</td><td></td>`; tbodyRes.appendChild(tr); });
+      const total = seleccionadas.reduce((a,b)=>a+b.monto,0); document.getElementById('totalCobrar').textContent = `S/. ${total.toFixed(2)}`;
+      document.getElementById('resultado').style.display='none'; document.getElementById('resumen').style.display='block';
+    });
+
+    document.getElementById('rCancelar').addEventListener('click', ()=>{ document.getElementById('resumen').style.display='none'; document.getElementById('resultado').style.display='none'; document.getElementById('grupo').value=''; setActive('inicio'); });
+    document.getElementById('rRegresar').addEventListener('click', ()=>{ document.getElementById('resumen').style.display='none'; document.getElementById('resultado').style.display='block'; });
+
+    document.getElementById('rContinuar').addEventListener('click', ()=>{
+      const rows=[...document.querySelectorAll('#tbodyResumen tr')]; if(!rows.length){ alert('No hay cuotas en el resumen.'); return; }
+      let total=0; const periodos=[]; rows.forEach(tr=>{ const t=tr.children; total+=parseFloat(t[1].textContent.replace('S/.','')); periodos.push(t[0].textContent.trim()); });
+      ['nombre','dni','codigo','programa','inicio','registro'].forEach(k=>{ document.getElementById('p_'+k).textContent=document.getElementById('r_'+k).textContent; });
+      document.getElementById('p_periodos').textContent = 'Periodos de cuotas a cobrar: ' + periodos.join(', ');
+      document.getElementById('p_total').textContent = 'S/. ' + total.toFixed(2);
+      const titular=document.getElementById('r_nombre').textContent.split(','); if(titular.length===2){ document.getElementById('pay_apellidos').value=titular[0].trim(); document.getElementById('pay_nombre').value=titular[1].trim(); }
+      document.getElementById('resumen').style.display='none'; document.getElementById('pago').style.display='block';
+      payMethod.value='Tarjeta de Crédito'; renderMethodUI();
+    });
+
+    // Pago – método dinámico
+    const methodUI = document.getElementById('methodUI'); const payMethod = document.getElementById('pay_method'); const pProcesar = document.getElementById('pProcesar');
+
+    // Logos SVG inline (sin depender de archivos externos)
+    function svgVisa(){return `<svg viewBox='0 0 120 40' aria-label='VISA'><rect fill='#1a1f71' rx='6' ry='6' width='120' height='40'/><text x='60' y='26' font-size='22' text-anchor='middle' fill='white' font-family='Segoe UI, Arial, sans-serif' font-weight='900'>VISA</text></svg>`}
+    function svgMaster(){return `<svg viewBox='0 0 120 40' aria-label='MasterCard'><rect fill='#fff' rx='6' ry='6' width='120' height='40' stroke='#cfd6dd'/><circle cx='52' cy='20' r='12' fill='#eb001b'/><circle cx='68' cy='20' r='12' fill='#f79e1b' opacity='0.85'/></svg>`}
+    function svgDiners(){return `<svg viewBox='0 0 120 40' aria-label='Diners Club'><rect fill='#fff' rx='6' ry='6' width='120' height='40' stroke='#cfd6dd'/><circle cx='50' cy='20' r='10' fill='#1a75bb'/><circle cx='70' cy='20' r='10' fill='#8cc2f2'/></svg>`}
+    function svgAmex(){return `<svg viewBox='0 0 120 40' aria-label='AmEx'><rect fill='#2e77bb' rx='6' ry='6' width='120' height='40'/><text x='60' y='26' font-size='18' text-anchor='middle' fill='white' font-family='Segoe UI, Arial, sans-serif' font-weight='900'>AMEX</text></svg>`}
+
+    function svgYape(){return `<svg viewBox='0 0 120 40' aria-label='Yape'><rect fill='#7a2cbe' rx='10' ry='10' width='120' height='40'/><text x='60' y='26' font-size='18' text-anchor='middle' fill='white' font-family='Segoe UI, Arial, sans-serif' font-weight='900'>Yape</text></svg>`}
+    function svgBBVA(){return `<svg viewBox='0 0 120 40' aria-label='BBVA'><rect fill='#fff' rx='6' ry='6' width='120' height='40' stroke='#cfd6dd'/><text x='60' y='26' font-size='20' text-anchor='middle' fill='#072146' font-family='Segoe UI, Arial, sans-serif' font-weight='900'>BBVA</text></svg>`}
+    function svgTunki(){return `<svg viewBox='0 0 120 40' aria-label='Tunki'><rect fill='#ff007f' rx='10' ry='10' width='120' height='40'/><text x='60' y='26' font-size='18' text-anchor='middle' fill='white' font-family='Segoe UI, Arial, sans-serif' font-weight='800'>Tunki</text></svg>`}
+    function svgLigo(){return `<svg viewBox='0 0 120 40' aria-label='Ligo'><rect fill='#6b21a8' rx='10' ry='10' width='120' height='40'/><text x='60' y='26' font-size='18' text-anchor='middle' fill='white' font-family='Segoe UI, Arial, sans-serif' font-weight='800'>Ligo</text></svg>`}
+    function svgMobileCard(){return `<svg viewBox='0 0 120 40' aria-label='MobileCard'><rect fill='#ff8c00' rx='10' ry='10' width='120' height='40'/><text x='60' y='26' font-size='16' text-anchor='middle' fill='white' font-family='Segoe UI, Arial, sans-serif' font-weight='800'>MobileCard</text></svg>`}
+
+    function brand(html){return `<span class="brand">${html}</span>`}
+
+    function renderMethodUI(){ const method=payMethod.value; if(!method){ methodUI.style.display='none'; methodUI.innerHTML=''; pProcesar.textContent='Procesar pago ▶'; return; } methodUI.style.display='block'; let html='';
+      if(method==='Tarjeta de Crédito'){
+        html = `<div><strong>Tarjetas aceptadas</strong></div>
+                <div class="option-row" id="ccOptions">
+                  <label class="option-card selected">
+                    <input type="radio" name="ccOpt" value="visa_mc" checked />
+                    ${brand(svgVisa())}
+                    ${brand(svgMaster())}
+                  </label>
+                  <label class="option-card">
+                    <input type="radio" name="ccOpt" value="diners_amex" />
+                    ${brand(svgDiners())}
+                    ${brand(svgAmex())}
+                  </label>
+                </div>`;
+        pProcesar.textContent='Procesar pago ▶';
+      
+      } else if(method==='Link de Pago: Tarjetas / Yape'){
+        html = `<div class="help">Se enviará un Link de Pago al correo y teléfono ingresado para completar el pago.</div>`;
+        pProcesar.textContent = 'Enviar Link de Pago ▶';
+      } else if(method==='SafetyPay'){
+        html = `<div class="help">Se enviará el código de pago de SAFETYPAY al correo y teléfono ingresado.</div>`;
+        pProcesar.textContent = 'Generar Código SAFETYPAY ▶';
+      } else if(method==='Código QR'){
+        html = `<div class="radio-row">
+                  <label><input type="radio" name="qrOpt" value="presencial"> Pago Presencial</label>
+                  <label><input type="radio" name="qrOpt" value="envio" checked> Enviar Código QR por Correo y SMS</label>
+                </div>
+                <div class="brand-row">
+                  ${brand(svgYape())}
+                  ${brand(svgBBVA())}
+                  ${brand(svgTunki())}
+                  ${brand(svgLigo())}
+                  ${brand(svgMobileCard())}
+                </div>`;
+        pProcesar.textContent='Procesar ▶';
+      } else if(method==='Cuotas Sin Intereses con BBVA, BCP y DINERS'){
+        html = `<div class="help">Aplica para tarjetas participantes. Se validará elegibilidad al procesar.</div>`;
+        pProcesar.textContent='Procesar pago ▶';
+      } else if(method==='Red Digital'){
+        html = `<div class="help">Se generará un código para pago en agentes/redes afiliadas.</div>`;
+        pProcesar.textContent='Generar Código ▶';
+      }
+      methodUI.innerHTML = html;
+      // activar resaltado de la opción elegida cuando el método sea tarjeta
+      if(method==='Tarjeta de Crédito'){
+        const cards = methodUI.querySelectorAll('#ccOptions .option-card');
+        cards.forEach(card=>{
+          const input = card.querySelector('input[type="radio"]');
+          input.addEventListener('change', ()=>{
+            cards.forEach(c=>c.classList.toggle('selected', c.querySelector('input').checked));
+          });
+          // click en toda la tarjeta
+          card.addEventListener('click', (e)=>{
+            if(e.target.tagName.toLowerCase()!== 'input'){
+              input.checked = true; input.dispatchEvent(new Event('change'));
+            }
+          });
+        });
+      }
+    }
+    payMethod.addEventListener('change', renderMethodUI);
+
+    /* ===== Modal Tarjeta: definir funciones ANTES de usar ===== */
+    const ccModal  = document.getElementById('ccModal');
+    const ccClose  = document.getElementById('ccClose');
+    const ccPayBtn = document.getElementById('ccPayBtn');
+    const ccResult = document.getElementById('ccResult');
+
+    function openCcModal(){
+      const totalTxt = document.getElementById('p_total').textContent.trim();
+      ccPayBtn.textContent = `PAGAR ${totalTxt}`;
+      ccResult.style.display='none'; ccResult.innerHTML='';
+      ccModal.style.display='flex';
+    }
+    function closeCcModal(){ ccModal.style.display='none'; }
+
+    if(ccClose){ ccClose.addEventListener('click', closeCcModal); }
+    if(ccModal){ ccModal.addEventListener('click', (e)=>{ if(e.target===ccModal) closeCcModal(); }); }
+    function validCardNumber(v){ v=v.replace(/\s+/g,''); return /^\d{13,19}$/.test(v); }
+    function validExpiry(v){ return /^(0[1-9]|1[0-2])\/(\d{2})$/.test(v); }
+    if(ccPayBtn){ ccPayBtn.addEventListener('click', ()=>{
+      const num = document.getElementById('ccNumber').value.trim();
+      const exp = document.getElementById('ccExpiry').value.trim();
+      const tit = document.getElementById('ccTitular').value.trim();
+      if(!validCardNumber(num)) { ccResult.className='center'; ccResult.style.display='block'; ccResult.innerHTML='<div style="color:#b91c1c;">Número de tarjeta inválido</div>'; return; }
+      if(!validExpiry(exp)) { ccResult.className='center'; ccResult.style.display='block'; ccResult.innerHTML='<div style="color:#b91c1c;">Fecha de expiración inválida</div>'; return; }
+      if(!tit){ ccResult.className='center'; ccResult.style.display='block'; ccResult.innerHTML='<div style="color:#b91c1c;">Ingresa el titular</div>'; return; }
+      // Éxito → Paso 4
+      closeCcModal();
+      goToConfirm('Tarjeta de Crédito');
+    }); }
+
+    // Botones pie Pago
+    document.getElementById('pRegresar').addEventListener('click', ()=>{ document.getElementById('pago').style.display='none'; document.getElementById('resumen').style.display='block'; });
+    document.getElementById('pCancelar').addEventListener('click', ()=>{ document.getElementById('pago').style.display='none'; document.getElementById('resumen').style.display='none'; document.getElementById('resultado').style.display='none'; document.getElementById('grupo').value=''; setActive('inicio'); });
+    document.getElementById('pProcesar').addEventListener('click', ()=>{
+      const method = (payMethod.value||'');
+      if(method==='Tarjeta de Crédito'){
+        openCcModal();
+      } else {
+        goToConfirm(method);
+      }
+    });
+
+    function goToConfirm(method){
+      // Rellenar datos
+      document.getElementById('conf_nombre').textContent = document.getElementById('p_nombre').textContent;
+      document.getElementById('conf_dni').textContent    = document.getElementById('p_dni').textContent;
+      document.getElementById('conf_programa').textContent = document.getElementById('p_programa').textContent;
+      document.getElementById('conf_total').textContent  = document.getElementById('p_total').textContent;
+      document.getElementById('conf_metodo').textContent = method;
+      document.getElementById('conf_periodos').textContent = document.getElementById('p_periodos').textContent.replace('Periodos de cuotas a cobrar: ','');
+      // Código operación
+      const code = 'OP-' + Math.random().toString(36).slice(2,8).toUpperCase();
+      document.getElementById('conf_codigo').textContent = code;
+      // Navegar (sin tocar views['confirm'] porque no existe en el router)
+      document.getElementById('pago').style.display='none';
+      document.getElementById('resumen').style.display='none';
+      document.getElementById('resultado').style.display='none';
+      document.getElementById('view-confirm').style.display='block';
+      setActive('cobro');
+      crumbText.textContent = 'Inicio / cobro / confirmación';
+    }
+
+    // Acciones confirmación
+    document.getElementById('confImprimir').addEventListener('click', ()=> window.print());
+    document.getElementById('confVolverCobro').addEventListener('click', ()=>{
+      document.getElementById('view-confirm').style.display='none';
+      document.getElementById('pago').style.display='block';
+    });
+    document.getElementById('confNueva').addEventListener('click', ()=>{
+      document.getElementById('view-confirm').style.display='none';
+      document.getElementById('pago').style.display='none';
+      document.getElementById('resumen').style.display='none';
+      document.getElementById('resultado').style.display='none';
+      document.getElementById('grupo').value='';
+      setActive('inicio');
+    });
+
+    // ==== Tests rápidos (no cambian comportamiento) ====
+    console.assert(typeof openCcModal === 'function', 'openCcModal no está definida');
+    console.assert(document.getElementById('view-cobro'), 'Vista Cobro no existe');
+    console.assert(document.getElementById('methodUI'), 'methodUI no existe');
+  </script>
+</body>
+</html>
